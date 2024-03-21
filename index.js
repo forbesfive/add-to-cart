@@ -10,11 +10,25 @@ const database = getDatabase(app)
 const shoppingListInDB = ref(database, "shoppingList")
 
 const inputFieldEl = document.getElementById("input-field")
+const nectarButtonJEl = document.getElementById("nectar-button-j")
+const nectarButtonMEl = document.getElementById("nectar-button-m")
 const addButtonEl = document.getElementById("add-button")
 const shoppingListEl = document.getElementById("shopping-list")
 
+let nectarValue = ""
+
+nectarButtonJEl.addEventListener("click", function() {
+    nectarValue = "J"
+})
+
+nectarButtonMEl.addEventListener("click", function() {
+    nectarValue = "M"
+})
+
 addButtonEl.addEventListener("click", function() {
-    let inputValue = inputFieldEl.value
+    let inputValue = {
+        item: inputFieldEl.value,
+        nectar: nectarValue}
     
     push(shoppingListInDB, inputValue)
     
@@ -53,7 +67,11 @@ function appendItemToShoppingListEl(item) {
     
     let newEl = document.createElement("li")
     
-    newEl.textContent = itemValue
+    if (itemValue.nectar === "") {
+        newEl.textContent = itemValue.item
+    } else {
+        newEl.textContent = `${itemValue.item} (${itemValue.nectar})`
+    }
     
     newEl.addEventListener("dblclick", function() {
         let exactLocationOfItemInDB = ref(database, `shoppingList/${itemID}`)
